@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(uuid())
+  email        String    @unique
+  name         String?
+  campus       String
+  gradYear     Int?
+  avatar       String?
+  isVerified   Boolean   @default(false)
+  verifyToken  String?   @unique
+  createdAt    DateTime  @default(now())
+  listings     Listing[]
+  conversations Conversation[] @relation("participantA")
+  messages     Message[]
+  blocks       Block[]
+}
+
+model Listing {
+  id          String    @id @default(uuid())
+  title       String
+  description String
+  category    String
+  condition   String
+  price       Float
+  location    String?
+  availableFrom DateTime?
+  availableTo   DateTime?
+  images      ListingImage[]
+  seller      User      @relation(fields: [sellerId], references: [id])
+  sellerId    String
+  campus      String
+  isSold      Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+}
+
+model ListingImage {
+  id        String  @id @default(uuid())
+  url       String
+  listing   Listing @relation(fields: [listingId], references: [id])
+  listingId String
+}
+
+model Conversation {
+  id        String   @id @default(uuid())
+  userA     User     @relation("participantA", fields: [userAId], references: [id])
+  userAId   String
+  userB     User     @relation("participantB", fields: [userBId], references: [id])
+  userBId   String
+  messages  Message[]
+  updatedAt DateTime @updatedAt
+}
+
+model Message {
+  id             String   @id @default(uuid())
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  conversationId String
+  sender         User     @relation(fields: [senderId], references: [id])
+  senderId       String
+  body           String
+  createdAt      DateTime @default(now())
+  isRead         Boolean  @default(false)
+}
+
+model Report {
+  id        String   @id @default(uuid())
+  reporter  User     @relation(fields: [reporterId], references: [id])
+  reporterId String
+  listing   Listing? @relation(fields: [listingId], references: [id])
+  listingId String?
+  reason    String
+  createdAt DateTime @default(now())
+}
+
+model Block {
+  id       String @id @default(uuid())
+  blocker  User   @relation(fields: [blockerId], references: [id])
+  blockerId String
+  blocked  User   @relation(fields: [blockedId], references: [id])
+  blockedId String
+  createdAt DateTime @default(now())
+}
