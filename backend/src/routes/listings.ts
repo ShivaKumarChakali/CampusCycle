@@ -108,12 +108,12 @@ router.get('/', authRequired, async (req: AuthedRequest, res) => {
       ];
     }
 
-    const orderBy =
+    const orderBy: any =
       sort === 'price-low'
-        ? { price: 'asc' }
+        ? { price: 'asc' as const }
         : sort === 'price-high'
-        ? { price: 'desc' }
-        : { createdAt: 'desc' };
+        ? { price: 'desc' as const }
+        : { createdAt: 'desc' as const };
 
     const pageNum = Number(page) || 1;
     const pageSize = 30;

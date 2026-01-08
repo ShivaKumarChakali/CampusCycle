@@ -22,7 +22,6 @@ router.get('/me', authRequired, async (req: AuthedRequest, res) => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: req.user.id },
-      include: { campus: true },
       select: {
         id: true,
         email: true,
@@ -51,7 +50,6 @@ router.patch('/me', authRequired, async (req: AuthedRequest, res) => {
     const user = await prisma.user.update({
       where: { id: req.user.id },
       data: body,
-      include: { campus: true },
       select: {
         id: true,
         email: true,

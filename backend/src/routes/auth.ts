@@ -211,7 +211,6 @@ router.get('/me', async (req, res) => {
     const payload: any = jwt.verify(token, JWT_SECRET);
     const user = await prisma.user.findUnique({
       where: { id: payload.sub },
-      include: { campus: true },
       select: {
         id: true,
         email: true,
