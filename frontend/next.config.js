@@ -37,6 +37,14 @@ const nextConfig = {
   // Production optimizations
   compress: true,
   poweredByHeader: false,
+  eslint: {
+    // Ignore ESLint during builds (optional - uncomment if you want to skip ESLint)
+    // ignoreDuringBuilds: true,
+  },
+  typescript: {
+    // Type checking is enabled - fix all type errors
+    ignoreBuildErrors: false,
+  },
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
