@@ -164,7 +164,7 @@ router.post('/', authRequired, upload.array('images', 5), async (req: AuthedRequ
       isGiveaway: req.body.isGiveaway === 'true' || req.body.isGiveaway === true,
     });
 
-    const files = req.files as Express.Multer.File[];
+    const files = req.files as any[];
     
     // Upload images to cloud storage or local
     let images: { url: string }[];

@@ -8,7 +8,8 @@ export interface AuthedRequest extends Request {
   body: any;
   params: any;
   query: any;
-  files?: Express.Multer.File[] | { [fieldname: string]: Express.Multer.File[] };
+  headers: any;
+  files?: any;
 }
 
 export const authRequired = async (req: AuthedRequest, res: Response, next: NextFunction) => {
