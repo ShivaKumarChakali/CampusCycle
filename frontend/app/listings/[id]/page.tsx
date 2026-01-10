@@ -6,6 +6,7 @@ import Image from 'next/image'
 import api from '@/lib/api'
 import { useAuth } from '@/lib/auth-context'
 import Layout from '@/components/Layout'
+import { getImageUrl } from '@/lib/utils'
 
 interface Listing {
   id: string
@@ -110,10 +111,11 @@ export default function ListingDetailPage() {
               <div className="space-y-4">
                 <div className="relative h-96 w-full bg-gray-100 rounded-lg overflow-hidden">
                   <Image
-                    src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}${listing.images[0].url}`}
+                    src={getImageUrl(listing.images[0].url)}
                     alt={listing.title}
                     fill
                     className="object-cover"
+                    unoptimized
                   />
                 </div>
                 {listing.images.length > 1 && (
@@ -124,10 +126,11 @@ export default function ListingDetailPage() {
                         className="relative h-24 w-full bg-gray-100 rounded-lg overflow-hidden"
                       >
                         <Image
-                          src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}${image.url}`}
+                          src={getImageUrl(image.url)}
                           alt={listing.title}
                           fill
                           className="object-cover"
+                          unoptimized
                         />
                       </div>
                     ))}

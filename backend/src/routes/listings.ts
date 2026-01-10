@@ -77,8 +77,18 @@ router.get('/', authRequired, async (req: AuthedRequest, res) => {
       page = 1,
     } = req.query as any;
 
+    // Get campusId from user - could be direct field or from campus relation
+    let campusId = req.user.campusId;
+    if (!campusId && req.user.campus) {
+      campusId = req.user.campus.id;
+    }
+    
+    if (!campusId) {
+      return res.status(400).json({ error: 'User must have a campus assigned' });
+    }
+
     const where: any = {
-      campusId: req.user.campusId,
+      campusId: campusId,
     };
 
     // Only show available listings by default (users can filter)
@@ -186,6 +196,15 @@ router.post('/', authRequired, upload.array('images', 5), async (req: AuthedRequ
       images = [];
     }
 
+    // Ensure campusId is set - use from user object or user's campus relation
+    let campusId = req.user.campusId;
+    if (!campusId && req.user.campus) {
+      campusId = req.user.campus.id;
+    }
+    if (!campusId) {
+      return res.status(400).json({ error: 'User must have a campus assigned' });
+    }
+
     const listing = await prisma.listing.create({
       data: {
         title: body.title,
@@ -194,12 +213,12 @@ router.post('/', authRequired, upload.array('images', 5), async (req: AuthedRequ
         condition: body.condition,
         price: body.price,
         isGiveaway: body.isGiveaway,
-        status: body.status,
+        status: body.status || 'AVAILABLE',
         location: body.location,
         zipcode: body.zipcode,
         availableFrom: body.availableFrom ? new Date(body.availableFrom) : null,
         availableTo: body.availableTo ? new Date(body.availableTo) : null,
-        campusId: req.user.campusId,
+        campusId: campusId,
         sellerId: req.user.id,
         images: { create: images },
       },

@@ -59,7 +59,8 @@ export default function NewListingPage() {
         },
       })
 
-      router.push(`/listings/${response.data.listing.id}`)
+      // Redirect to marketplace so user can see their new listing
+      router.push('/marketplace')
     } catch (err: any) {
       setError(err.response?.data?.error || 'Failed to create listing')
       setLoading(false)

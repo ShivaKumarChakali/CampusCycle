@@ -6,6 +6,7 @@ import Image from 'next/image'
 import api from '@/lib/api'
 import { useAuth } from '@/lib/auth-context'
 import Layout from '@/components/Layout'
+import { getImageUrl } from '@/lib/utils'
 
 interface Listing {
   id: string
@@ -296,10 +297,11 @@ export default function MarketplacePage() {
                     {listing.images.length > 0 ? (
                       <div className="relative h-48 w-full bg-gray-100 overflow-hidden">
                         <Image
-                          src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}${listing.images[0].url}`}
+                          src={getImageUrl(listing.images[0].url)}
                           alt={listing.title}
                           fill
                           className="object-cover group-hover:scale-110 transition-transform duration-300"
+                          unoptimized
                         />
                         {listing.isGiveaway && (
                           <div className="absolute top-2 right-2">
